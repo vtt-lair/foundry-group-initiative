@@ -1,5 +1,8 @@
 # Changelog
 
+# 2.1.1
+- fix settings issue - thanks @strongpauly
+
 # 2.1.0
 - version 10 compatibility
 - fix skip grouped combatants
