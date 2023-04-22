@@ -12,10 +12,10 @@ let _gi_CONIG_USEROLLEDINIT = false;
 let _gi_openedGroups = [];
 let _gi_rollsWrapped = false;
 
-// Shortcut to localize. 
+// Shortcut to localize.
 const _gi_i18n = key => game.i18n.localize(key);
 
-// Sets the settings or returns the current value. 
+// Sets the settings or returns the current value.
 const _gi_initSetting = (key, setting) => {
     let config;
 
@@ -95,7 +95,7 @@ const GroupInitiative = {
                 }),
                 {}
             );
-        }        
+        }
 
         // Get first Combatant id for each group
         const ids = Object.keys(groups).map(key => groups[key][0]);
@@ -115,10 +115,10 @@ const GroupInitiative = {
             } else {
                 group = groups[actor.data._id];
             }
-            
+
             if (group.length <= 1 || initiative) return updates;
 
-            // Get initiative from leader of group.            
+            // Get initiative from leader of group.
             initiative = this.combatants.get(group[0]).initiative;
 
             updates.push({ _id: id, initiative });
@@ -131,7 +131,7 @@ const GroupInitiative = {
 
     /**
      * TEMPORARY! Awaiting CUB API access - Checks an actor to see if its name should be replaced
-     * @param {*} actor 
+     * @param {*} actor
      * @returns {Boolean} shouldReplace
      */
     shouldReplaceName(actor) {
@@ -146,7 +146,7 @@ const GroupInitiative = {
 
     /**
      * TEMPORARY! Awaiting CUB API access - For a given actor, find out if there is a replacement name and return it
-     * @param {*} actor 
+     * @param {*} actor
      * @returns {String} replacementName
      */
     getReplacementName(actor) {
@@ -172,10 +172,10 @@ const GroupInitiative = {
                 groups[groupsIndex] = [];
                 useGroupIndex = groupsIndex;
             }
-            
+
             if (useGroupIndex > -1) {
                 groups[useGroupIndex].push(combatants[i]);
-            }        
+            }
         }
 
         return groups;
@@ -206,10 +206,10 @@ const GroupInitiative = {
             }
         } else if (!_gi_rollsWrapped) {
             libWrapper.register(_gi_MODULE_NAME, "Combat.prototype.rollAll", GroupInitiative.rollAll.bind(combat), "MIXED");
-            libWrapper.register(_gi_MODULE_NAME, "Combat.prototype.rollNPC", GroupInitiative.rollNPC.bind(combat), "MIXED");            
+            libWrapper.register(_gi_MODULE_NAME, "Combat.prototype.rollNPC", GroupInitiative.rollNPC.bind(combat), "MIXED");
             _gi_rollsWrapped = true;
         };
-        
+
     },
 
     eventListeners(html) {
@@ -219,15 +219,15 @@ const GroupInitiative = {
             if (elem.currentTarget.open) {
                 if (!_gi_openedGroups.includes(elem.currentTarget.id)) {
                     _gi_openedGroups.push(elem.currentTarget.id);
-                }                
+                }
             } else {
                 const idx = _gi_openedGroups.findIndex((x) => x === elem.currentTarget.id);
                 if (idx > -1) {
                     _gi_openedGroups.splice(idx, 1);
                 }
             }
-            
-        });        
+
+        });
     }
 }
 
@@ -314,6 +314,8 @@ Hooks.once('init', () => {
 Hooks.on('renderCombatTracker', async (app, html, data) => {
     // if not using grouped initiative, return
     if (!_gi_CONFIG_GROUPINITIATIVE) return;
+    // don't execute for popped out combat tracker
+    if (html.attr('id') === 'combat-popout') return;
     const combat = data.combat || app.combat;
     // if no combat, return
     if (!combat) return;
@@ -323,7 +325,7 @@ Hooks.on('renderCombatTracker', async (app, html, data) => {
     if (_gi_CONFIG_SKIPGROUPED && !_gi_CONFIG_GROUPSAME) {
         const activeCombatantId = html.find("li.active")?.attr("data-combatant-id");
         let groups = GroupInitiative.getGroups(combat.turns).filter((x) => x.length >= 2);
-        
+
         let inGroup = false;
         for (let groupItem of groups)
         {
@@ -358,9 +360,9 @@ Hooks.on('renderCombatTracker', async (app, html, data) => {
     if (_gi_CONFIG_GROUPSAME) {
         let combatants = combat.turns;
         // create initiative groups; array of arrays
-        
+
         let groups = GroupInitiative.getGroups(combatants);
-        // if only 1 initiative group, return 
+        // if only 1 initiative group, return
         if (groups.length < 2) return;
 
         // filter out initiative groups with only a single combatant (no need to collapse)
@@ -375,7 +377,7 @@ Hooks.on('renderCombatTracker', async (app, html, data) => {
                 if ($(li).data("combatantId") === c.id) {
                     return li;
                 }
-            }        
+            }
         });
 
         // create initiative groups of list item elements
@@ -393,14 +395,14 @@ Hooks.on('renderCombatTracker', async (app, html, data) => {
             $(initiativeGroups[i]).wrapAll(`<details class="group-initiative-header" id="${headerCombatants[i].id}" ${opened} />`);
             $(initiativeGroups[i]).css("padding-left", "30px");
 
-            // create a summary element for each details element, based on header combatant        
+            // create a summary element for each details element, based on header combatant
             let shouldReplace = false;
             let combatantName = headerCombatants[i].name;
             let showHiddenMask = false;
             let toolTip = '';
             if (game.modules.get("combat-utility-belt")?.active) {
                 shouldReplace = GroupInitiative.shouldReplaceName(headerActor);
-                
+
                 if (shouldReplace) {
                     if (game.user.isGM) {
                         showHiddenMask = true;
@@ -410,16 +412,16 @@ Hooks.on('renderCombatTracker', async (app, html, data) => {
                     }
                 }
             }
-            
+
             const data = {
                 Id: headerCombatants[i].id,
-                CombatantImage: headerCombatants[i].img,            
+                CombatantImage: headerCombatants[i].img,
                 CombatantInitiative: headerCombatants[i].initiative || "",
                 CombatantName: combatantName,
                 ShowHiddenMask: showHiddenMask,
                 ToolTip: toolTip,
             };
-        
+
             const currentGroup = $(headerCombatantLIs[i]).prop("parentElement");
             const groupHeader = await renderTemplate(
                 'modules/group-initiative/templates/group-collapse.html',
@@ -438,14 +440,14 @@ Hooks.on('renderCombatTracker', async (app, html, data) => {
                 } else {
                     return game.combat.nextTurn();
                 }
-            } 
+            }
             $(details).prop("open", true);
         }
 
         const tracker = html.find("#combat-tracker");
         GroupInitiative.eventListeners(tracker);
     }
-    
+
 });
 
 Hooks.on('createCombatant', async (combatant) => {
@@ -471,7 +473,7 @@ Hooks.on('createCombatant', async (combatant) => {
                 initiative: combatantHeader?.initiative
             });
         }
-    }    
+    }
 });
 
 Hooks.on('deleteCombat', async () => {
