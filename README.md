@@ -3,6 +3,8 @@
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/N4N36ZSPQ)
 
+_If for some reason version 2.1.3 is failing downloading, just uninstall and re-install. Something went wonky with the release._
+
 # Group Initiative
 Roll Group Initiative from the Combat Tracker in [Foundry VTT](https://foundryvtt.com/)
 
