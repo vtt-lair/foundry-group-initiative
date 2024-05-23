@@ -91,7 +91,7 @@ const GroupInitiative = {
             groups = creatures.reduce(
                 (g, combatant) => ({
                     ...g,
-                    [combatant.actor.id]: (g[combatant.actor.id] || []).concat(combatant.data._id),
+                    [combatant.actor.id]: (g[combatant.actor.id] || []).concat(combatant._id),
                 }),
                 {}
             );
@@ -113,7 +113,7 @@ const GroupInitiative = {
             if (game.version.split('.')[0] === '10') {
                 group = groups[actor.id];
             } else {
-                group = groups[actor.data._id];
+                group = groups[actor._id];
             }
 
             if (group.length <= 1 || initiative) return updates;
@@ -135,7 +135,7 @@ const GroupInitiative = {
      * @returns {Boolean} shouldReplace
      */
     shouldReplaceName(actor) {
-        const dispositionEnum = actor.isToken ? actor.token.data.disposition : actor.data.token.disposition;
+        const dispositionEnum = actor.isToken ? actor.token.disposition : actor.token.disposition;
         const disposition = Object.keys(CONST.TOKEN_DISPOSITIONS).find(key => CONST.TOKEN_DISPOSITIONS[key] === dispositionEnum);
         const dispositionEnableSetting = game.settings.get('combat-utility-belt', _gi_settingkeys.hideNames[`enable${disposition.titleCase()}`]);
         const actorEnableFlag = actor.getFlag('combat-utility-belt', 'enableHideName');
@@ -150,7 +150,7 @@ const GroupInitiative = {
      * @returns {String} replacementName
      */
     getReplacementName(actor) {
-        const dispositionEnum = actor.isToken ? actor.token.data.disposition : actor.data.token.disposition;
+        const dispositionEnum = actor.isToken ? actor.token.disposition : actor.token.disposition;
         const disposition = Object.keys(CONST.TOKEN_DISPOSITIONS).find(key => CONST.TOKEN_DISPOSITIONS[key] === dispositionEnum);
         const replacementSetting = game.settings.get('combat-utility-belt', _gi_settingkeys.hideNames[`${disposition.toLowerCase()}NameReplacement`]);
         const replacementFlag = actor.getFlag('combat-utility-belt', 'hideNameReplacement');
