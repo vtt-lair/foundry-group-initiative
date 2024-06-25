@@ -1,5 +1,12 @@
 # Changelog
 
+# 2.1.2 - 2.1.7
+- Fix seeting issue
+- Fix bugs
+- Update module to show as verified for 11
+- Fix few last deprecated fields issues
+- Fix it so that version 12 remembers saved settings
+
 # 2.1.1
 - fix settings issue - thanks @strongpauly
 
