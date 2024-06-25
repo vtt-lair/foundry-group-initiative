@@ -22,7 +22,7 @@ const _gi_initSetting = (key, setting) => {
     try {
         config = game.settings.get(_gi_MODULE_NAME, key);
     } catch (e) {
-        if (e.message !== 'This is not a registered game setting') {
+        if (e.message !== 'This is not a registered game setting' && e.message !== `"${_gi_MODULE_NAME}.${key}" is not a registered game setting`) {
             throw e;
         }
 
